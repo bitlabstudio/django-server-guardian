@@ -4,8 +4,6 @@ import logging
 
 DEBUG = True
 
-logging.getLogger("factory").setLevel(logging.WARN)
-
 SITE_ID = 1
 
 APP_ROOT = os.path.abspath(
@@ -47,7 +45,6 @@ EXTERNAL_APPS = [
 
 INTERNAL_APPS = [
     'server_guardian',
-    'server_guardian.tests.test_app',
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS

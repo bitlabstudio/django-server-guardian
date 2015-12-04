@@ -1,7 +1,9 @@
 Django Server Guardian
-============
+======================
 
 A reusable Django app, that fetches and visualizes server health metrics.
+
+The data is fetched from the `API app`_, that is installed on the client server.
 
 Installation
 ------------
@@ -38,12 +40,6 @@ Add the ``server_guardian`` URLs to your ``urls.py``
         url(r'^server-guardian/', include('server_guardian.urls')),
     )
 
-Before your tags/filters are available in your templates, load them by using
-
-.. code-block:: html
-
-	{% load server_guardian_tags %}
-
 
 Don't forget to migrate your database
 
@@ -55,8 +51,25 @@ Don't forget to migrate your database
 Usage
 -----
 
-TODO: Describe usage or point to docs. Also describe available settings and
-templatetags.
+Once you've installed the `API app`_ on the client server and added some
+endpoitns to your settings, as described there, you can go ahead and configure
+your servers.
+
+Visit the Django admin for the server guardian, create a new ``Server`` object
+and fill out the fields.
+
+:API URL: This is the url, the `API app`_ is hooked in under on the client server.
+:Server name: You can simply name the server.
+:Token: You will need to create a token string, that you'll add here and on the
+remote server.
+
+The other fields are not to be edited and they will be overwritten every time the
+guardian fetches new data.
+
+Finally you should schedule the management command ``guardian_fetch`` to run
+as often as you wish to update your server status (e.g. with cron).
+
+Visit ``/server-guardian/status/`` for health status overview.
 
 
 Contribute
@@ -80,3 +93,5 @@ If you want to contribute to this project, please perform the following steps
 In order to run the tests, simply execute ``tox``. This will install two new
 environments (for Django 1.6 and Django 1.7) and run the tests against both
 environments.
+
+.. _API app: https://github.com/bitmazk/django-server-guardian-api
