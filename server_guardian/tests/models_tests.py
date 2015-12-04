@@ -1,14 +1,14 @@
 """Tests for the models of the server_guardian app."""
 from django.test import TestCase
 
-# from . import factories
+from mixer.backend.django import mixer
 
 
-class DummyModelTestCase(TestCase):
-    """Tests for the ``DummyModel`` model."""
-    def setUp(self):
-        # self.obj = factories.DummyModelFactory()
+class ServerTestCase(TestCase):
+    """Tests for the ``Server`` model class."""
+    longMessage = True
 
-    def test_model(self):
-        # self.assertTrue(self.obj.pk)
-        self.assertTrue(True)
+    def test_instantiation(self):
+        server = mixer.blend('server_guardian.Server')
+        self.assertTrue(server.pk)
+
