@@ -44,6 +44,9 @@ def runtests(*test_args):
     failures = NoseCoverageTestRunner(verbosity=2, interactive=True).run_tests(
         test_args)
 
+    local(
+        'flake8 --ignore=E126 --statistics --exclude=submodules,migrations .')
+
     with lcd(settings.COVERAGE_REPORT_HTML_OUTPUT_DIR):
         total_line = local('grep -n Total index.html', capture=True)
         match = re.search(r'^(\d+):', total_line)
