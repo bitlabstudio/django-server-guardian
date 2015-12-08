@@ -2,7 +2,7 @@
     color: green;
 }
 .server-guardian-status-WARNING {
-    color: yellow;
+    color: orange;
 }
 .server-guardian-status-DANGER {
     color: red;
