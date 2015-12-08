@@ -76,7 +76,7 @@ guardian fetches new data.
 Finally you should schedule the management command ``guardian_fetch`` to run
 as often as you wish to update your server status (e.g. with cron).
 
-Visit ``/server-guardian/status/`` for health status overview.
+Visit ``/server-guardian/`` for health status overview.
 
 Settings
 --------
