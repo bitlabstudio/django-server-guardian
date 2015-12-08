@@ -1,0 +1,9 @@
+.server-guardian-status-OK {
+    color: green;
+}
+.server-guardian-status-WARNING {
+    color: yellow;
+}
+.server-guardian-status-DANGER {
+    color: red;
+}

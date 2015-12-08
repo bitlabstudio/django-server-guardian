@@ -48,6 +48,14 @@ Don't forget to migrate your database
     ./manage.py migrate server_guardian
 
 
+For simple color highlighting of the server status, you can include the following
+line to your template:
+
+.. code-block:: html
+
+        <link href="{% static "server_guardian/css/styles.css" %}" rel="stylesheet">
+
+
 Usage
 -----
 
