@@ -1,6 +1,7 @@
 """Collection of constants fo the ``server_guardian`` app."""
 
 
+# keep this in sync with server_guardian_api.constants
 SERVER_STATUS = {  # pragma: no cover
     'OK': 'OK',
     'WARNING': 'WARNING',
