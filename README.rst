@@ -71,6 +71,25 @@ as often as you wish to update your server status (e.g. with cron).
 
 Visit ``/server-guardian/status/`` for health status overview.
 
+Settings
+--------
+
+There are a few settings, you can work with.
+
+SERVER_GUARDIAN_EMAIL_ON_STATUS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sets on which HTML status codes to send an email to the admins.
+
+Default: ``SERVER_GUARDIAN_EMAIL_ON_STATUS = [403, 404, 405]``
+
+SERVER_GUARDIAN_DASHBOARD_VIEW_PERMISSION
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This setting gets a function assigned, that is passed to the
+``user_passes_test`` decorator in the dashboard view.
+
+Default: ``SERVER_GUARDIAN_DASHBOARD_VIEW_PERMISSION = lambda u: u.is_superuser``
 
 Contribute
 ----------
