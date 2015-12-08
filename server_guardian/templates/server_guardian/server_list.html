@@ -23,7 +23,7 @@
                 <td>{{ server.last_updated }}</td>
                 <td>{{ server.status_code }}</td>
                 {% for metric in server.get_parsed_response %}
-                    <td>{{ metric.status }}</td>
+                    <td class="server-guardian-status-{{ metric.status }}">{{ metric.status }}</td>
                 {% endfor %}
             </tr>
             {% if server.has_errors %}
