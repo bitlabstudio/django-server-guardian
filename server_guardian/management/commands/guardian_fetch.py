@@ -60,8 +60,9 @@ class Command(BaseCommand):
         mails_sent = 0
 
         for server in Server.objects.all():
-            # TODO add security token
-            response = requests.get(url=server.url)
+            response = requests.get(url=server.url, params={
+                'token': server.token
+            })
             server.response_body = response.content
             server.status_code = response.status_code
             server.last_updated = now()
