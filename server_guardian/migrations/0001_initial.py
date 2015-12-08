@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
                 ('url', models.URLField(help_text=b'The URL, that the guardian API is available under.', verbose_name='API URL')),
                 ('token', models.CharField(help_text=b'Add this to your client server settings as "SERVER_GUARDIAN_SECURITY_TOKEN".', max_length=256, verbose_name='token')),
                 ('response_body', models.TextField(verbose_name='server response', blank=True)),
-                ('response_code', models.PositiveIntegerField(null=True, verbose_name='server response status code', blank=True)),
-                ('last_updated', models.DateTimeField(verbose_name='last updated')),
+                ('status_code', models.PositiveIntegerField(null=True, verbose_name='server response status code', blank=True)),
+                ('last_updated', models.DateTimeField(null=True, verbose_name='last updated', blank=True)),
             ],
         ),
     ]

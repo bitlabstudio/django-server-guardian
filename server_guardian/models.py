@@ -1,7 +1,12 @@
 """Models for the server_guardian app."""
+import json
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 from compat import python_2_unicode_compatible
+
+from . import constants
 
   
 @python_2_unicode_compatible
@@ -27,12 +32,13 @@ class Server(models.Model):
         verbose_name=_('server response'),
         blank=True,
     )
-    response_code = models.PositiveIntegerField(
+    status_code = models.PositiveIntegerField(
         verbose_name=_('server response status code'),
         blank=True, null=True,
     )
     last_updated = models.DateTimeField(
         verbose_name=_('last updated'),
+        blank=True, null=True,
     )
 
     def __unicode__(self):
@@ -43,3 +49,9 @@ class Server(models.Model):
             return self.name
         else:
             return self.url
+
+    def get_response_dict(self):
+        try:
+            return json.loads(self.response_body)
+        except ValueError:
+            return constants.HTML_STATUS_FALLBACK

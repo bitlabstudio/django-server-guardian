@@ -1,3 +1,5 @@
 django<1.9
 six
 django-compat
+django-libs
+requests

@@ -2,6 +2,9 @@
 import os
 import logging
 
+# prevent output of verbose DB gibberish
+logging.getLogger("django").setLevel(logging.WARN)
+
 DEBUG = True
 
 SITE_ID = 1
@@ -63,3 +66,10 @@ COVERAGE_MODULE_EXCLUDES = [
 COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 SECRET_KEY = 'foobar'
+
+FROM_EMAIL = 'foobar@example.com'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+ADMINS = (
+    ('Fooman Barster', 'daniel.kaufhold@bitmazk.com'),
+)
