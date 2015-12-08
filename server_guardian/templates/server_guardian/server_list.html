@@ -3,41 +3,28 @@
 {% block main %}
     <h1>Server Guardian Server Status Dashboard</h1>
     {% for server in object_list %}
+        <h2>{{ server.name }}</h2>
+        <p>URL: {{ server.url }}</p>
+        <p>Last updated: {{ server.last_updated }}</p>
+        <p>Status code: {{ server.status_code }}</p>
         <table style="width: 100%;">
-            <thead>
+        <thead>
+        <tr>
+            <th>Metric</th>
+            <th>Status</th>
+            <th colspan="4">Info</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for metric in server.get_parsed_response %}
             <tr>
-                <th>Server name</th>
-                <th>URL</th>
-                <th>Last updated</th>
-                <th>Status code</th>
-                {% for metric in server.get_parsed_response %}
-                    {# When there's no label, we assume, that there was no valid JSON response.#}
-                    <th>{{ metric.label|default:"No JSON" }}</th>
-                {% endfor %}
+                {# When there's no label, we assume, that there was no valid JSON response.#}
+                <td>{{ metric.label|default:"No JSON" }}</td>
+                <td class="server-guardian-status-{{ metric.status }}">{{ metric.status }}</td>
+                <td colspan="4">{{ metric.info|default:"It looks as if there was no valid JSON response." }}</td>
             </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ server.name }}</td>
-                <td>{{ server.url }}</td>
-                <td>{{ server.last_updated }}</td>
-                <td>{{ server.status_code }}</td>
-                {% for metric in server.get_parsed_response %}
-                    <td class="server-guardian-status-{{ metric.status }}">{{ metric.status }}</td>
-                {% endfor %}
-            </tr>
-            {% if server.has_errors %}
-                <tr>
-                    <td colspan="5" style="padding-top: 10px">
-                        <strong>Response:</strong>
-
-                        <div style="padding-top: 10px;max-height: 100px; overflow: scroll;">
-                            {{ server.response_body }}
-                        </div>
-                    </td>
-                </tr>
-            {% endif %}
-            </tbody>
+        {% endfor %}
+        </tbody>
         </table>
     {% endfor %}
 
