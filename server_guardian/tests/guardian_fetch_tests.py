@@ -74,6 +74,6 @@ class CommandTestCase(TestCase):
         )
         call_command('guardian_fetch')
         self.assertEqual(len(mail.outbox), 1, msg=(
-            'There should be one email sent if the response is JSON, but in the'
-            ' wrong format.'
+            'There should be one email sent if the response is JSON, but in'
+            ' the wrong format.'
         ))

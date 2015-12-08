@@ -8,7 +8,7 @@ from compat import python_2_unicode_compatible
 
 from . import constants
 
-  
+
 @python_2_unicode_compatible
 class Server(models.Model):
     name = models.CharField(

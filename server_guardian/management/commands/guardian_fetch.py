@@ -1,9 +1,8 @@
 """The command, that fetches the information from the configured servers."""
 import sys
-import json
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
 import requests

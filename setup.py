@@ -31,7 +31,6 @@ import os
 from setuptools import setup, find_packages
 import server_guardian as app
 
-
 dev_requires = [
     'flake8',
 ]
@@ -45,6 +44,7 @@ def read(fname):
     except IOError:
         return ''
 
+
 setup(
     name="django-server-guardian",
     version=app.__version__,
@@ -52,7 +52,9 @@ setup(
     long_description=read('README.rst'),
     license='The MIT License',
     platforms=['OS Independent'],
-    keywords='django, app, reusable, server, guardian, api, health, status, monitoring',
+    keywords=(
+        'django, app, reusable, server, guardian, api, health, status,'
+        ' monitoring'),
     author='Django Server Guardian',
     author_email='daniel.kaufhold@bitmazk.com',
     url="https://github.com/bitmazk/django-server-guardian",

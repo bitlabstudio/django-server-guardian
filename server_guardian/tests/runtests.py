@@ -41,11 +41,13 @@ class NoseCoverageTestRunner(CoverageRunner, NoseTestSuiteRunner):
 def runtests(*test_args):
     if django.VERSION >= (1, 7):
         django.setup()
-    failures = NoseCoverageTestRunner(verbosity=2, interactive=True).run_tests(
-        test_args)
 
     local(
-        'flake8 --ignore=E126 --statistics --exclude=submodules,migrations .')
+        'flake8 --ignore=E126 --ignore=W391 --statistics'
+        ' --exclude=submodules,migrations,build .')
+
+    failures = NoseCoverageTestRunner(verbosity=2, interactive=True).run_tests(
+        test_args)
 
     with lcd(settings.COVERAGE_REPORT_HTML_OUTPUT_DIR):
         total_line = local('grep -n Total index.html', capture=True)
