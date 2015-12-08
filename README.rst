@@ -68,8 +68,7 @@ and fill out the fields.
 
 :API URL: This is the url, the `API app`_ is hooked in under on the client server.
 :Server name: You can simply name the server.
-:Token: You will need to create a token string, that you'll add here and on the
-remote server.
+:Token: You will need to create a token string, that you'll add here and on the remote server.
 
 The other fields are not to be edited and they will be overwritten every time the
 guardian fetches new data.
