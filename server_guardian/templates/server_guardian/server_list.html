@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <h1>Server Guardian Server Status Dashboard</h1>
+    {% for server in object_list %}
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th>Server name</th>
+                <th>URL</th>
+                <th>Last updated</th>
+                <th>Status code</th>
+                {% for metric in server.get_parsed_response %}
+                    {# When there's no label, we assume, that there was no valid JSON response.#}
+                    <th>{{ metric.label|default:"No JSON" }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ server.name }}</td>
+                <td>{{ server.url }}</td>
+                <td>{{ server.last_updated }}</td>
+                <td>{{ server.status_code }}</td>
+                {% for metric in server.get_parsed_response %}
+                    <td>{{ metric.status }}</td>
+                {% endfor %}
+            </tr>
+            {% if server.has_errors %}
+                <tr>
+                    <td colspan="5" style="padding-top: 10px">
+                        <strong>Response:</strong>
+
+                        <div style="padding-top: 10px;max-height: 100px; overflow: scroll;">
+                            {{ server.response_body }}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+{% endblock %}

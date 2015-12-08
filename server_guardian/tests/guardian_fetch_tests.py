@@ -30,14 +30,17 @@ class CommandTestCase(TestCase):
 
     def test_command(self):
         self.server_response.status_code = 200
-        self.server_response.content = '{"status": "OK", "info": "it is OK"}'
+        json_response = (
+            '[{"label": "foobar", "status": "OK", "info": "it is OK"}]'
+        )
+        self.server_response.content = json_response
         requests.get = mock.MagicMock(
             return_value=self.server_response,
         )
         call_command('guardian_fetch')
         server = Server.objects.get(pk=self.server.pk)
         self.assertEqual(
-            server.get_response_dict()['status'],
+            server.get_parsed_response()[0]['status'],
             SERVER_STATUS['OK'],
             msg=(
                 'After the command was run, the server instance should have'

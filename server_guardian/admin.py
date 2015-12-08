@@ -1,11 +1,13 @@
 """Admin classes for the server_guardian app."""
-# from django.contrib import admin
+from django.contrib import admin
 
-# from . import models
+from . import models
 
 
-# class YourModelAdmin(admin.ModelAdmin):
-#    list_display = ['some', 'fields', ]
-#    search_fields = ['some', 'fieds', ]
+class ServerAdmin(admin.ModelAdmin):
+    """Custom admin for the ``Server`` model."""
+    list_display = ('name', 'url', 'status_code')
+    search_fields = ['name']
 
-# admin.site.register(models.YourModel, YourModelAdmin)
+
+admin.site.register(models.Server, ServerAdmin)

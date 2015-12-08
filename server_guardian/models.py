@@ -50,8 +50,14 @@ class Server(models.Model):
         else:
             return self.url
 
-    def get_response_dict(self):
+    def get_parsed_response(self):
         try:
             return json.loads(self.response_body)
         except ValueError:
             return constants.HTML_STATUS_FALLBACK
+
+    def has_errors(self):
+        for metric in self.get_parsed_response():
+            if metric['status'] in constants.ERROR_STATUS:
+                return True
+        return False

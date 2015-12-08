@@ -41,10 +41,10 @@ class Command(BaseCommand):
             return True
 
         try:
-            if server.get_response_dict()['status'] == SERVER_STATUS[
-                    'DANGER']:
-                return True
-        except KeyError as ex:
+            for metric in server.get_parsed_response():
+                if metric['status'] == SERVER_STATUS['DANGER']:
+                    return True
+        except (KeyError, TypeError) as ex:
             server.response_body = (
                 'Server got an error "{0}" and returned the following content:'
                 '{1}'.format(ex, server.response_body)
