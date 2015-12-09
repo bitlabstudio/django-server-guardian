@@ -1,4 +1,5 @@
 """The command, that fetches the information from the configured servers."""
+import os
 import sys
 
 from django.conf import settings
@@ -7,11 +8,13 @@ from django.utils.timezone import now
 
 import requests
 from django_libs.utils_email import send_email
+from django_libs.decorators import lockfile
 
 from ... import default_settings
 from ...models import Server
 from ...constants import SERVER_STATUS
 
+LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'command_name')
 
 class Command(BaseCommand):
 
@@ -54,6 +57,7 @@ class Command(BaseCommand):
 
         return False
 
+    @lockfile(LOCKFILE)
     def handle(self, *args, **options):
 
         count = 0
