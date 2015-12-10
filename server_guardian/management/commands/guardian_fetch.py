@@ -28,7 +28,7 @@ class Command(BaseCommand):
             subject_template='server_guardian/email/email_subject.html',
             body_template='server_guardian/email/warning_email_body.html',
             from_email=settings.FROM_EMAIL,
-            recipients=[admin[0] for admin in settings.ADMINS],
+            recipients=[admin[1] for admin in settings.ADMINS],
         )
 
     def get_email_required(self, server):
