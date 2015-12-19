@@ -21,6 +21,7 @@ class Command(BaseCommand):
     def send_error_email(self, server):
         context = {
             'server': server,
+            'subject': u'{} - {}'.format(server.status_code, server.name),
         }
         send_email(
             request={},
