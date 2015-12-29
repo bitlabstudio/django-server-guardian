@@ -11,3 +11,5 @@ tox
 django<1.9
 django-compat
 six
+
+django-server-guardian-api
