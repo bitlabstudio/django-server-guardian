@@ -48,13 +48,24 @@ EXTERNAL_APPS = [
 
 INTERNAL_APPS = [
     'server_guardian',
+    'server_guardian_api',
+    'server_guardian.tests.test_app',
 ]
+
+SERVER_GUARDIAN_SECURITY_TOKEN = 'foobar'
+
+LOGIN_URL = 'admin/login/'
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 
 MIDDLEWARE_CLASSES = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 COVERAGE_REPORT_HTML_OUTPUT_DIR = os.path.join(
@@ -71,5 +82,5 @@ FROM_EMAIL = 'foobar@example.com'
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 ADMINS = (
-    ('Fooman Barster', 'daniel.kaufhold@bitmazk.com'),
+    ('Fooman Barster', 'fooman.barster@example.com'),
 )
