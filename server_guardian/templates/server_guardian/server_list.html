@@ -8,6 +8,7 @@
     {% endif %}
     {% for server in object_list %}
         <h2>{{ server.name }}</h2>
+        <p><a href="{% url "admin:server_guardian_server_change" pk=server.pk %}">Edit server</a></p>
         <p>URL: {{ server.url }}</p>
         <p>Last updated: {{ server.last_updated }}</p>
         <p>Status code: {{ server.status_code }}</p>
