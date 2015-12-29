@@ -2,6 +2,10 @@
 
 {% block main %}
     <h1>Server Guardian Server Status Dashboard</h1>
+    <p><a href="{% url "admin:server_guardian_server_add" %}">Add new server</a></p>
+    {% if object_list %}
+        <p><a href="{% url "admin:server_guardian_server_changelist" %}">Edit existing servers</a></p>
+    {% endif %}
     {% for server in object_list %}
         <h2>{{ server.name }}</h2>
         <p>URL: {{ server.url }}</p>
@@ -26,6 +30,8 @@
         {% endfor %}
         </tbody>
         </table>
+    {% empty %}
+        <p>No servers added</p>
     {% endfor %}
 
 {% endblock %}
