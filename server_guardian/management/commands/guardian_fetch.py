@@ -14,7 +14,8 @@ from ... import default_settings
 from ...models import Server
 from ...constants import SERVER_STATUS
 
-LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'command_name')
+LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'guardian_fetch')
+
 
 class Command(BaseCommand):
 
@@ -81,4 +82,3 @@ class Command(BaseCommand):
             '[{0}] Updated {1} servers. Sent {2} warning emails.\n'.format(
                 now(), count, mails_sent)
         )
-

@@ -1,6 +1,7 @@
 """Models for the server_guardian app."""
 import json
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -49,6 +50,9 @@ class Server(models.Model):
             return self.name
         else:
             return self.url
+
+    def get_absolute_url(self):
+        return reverse('server_guardian_dashboard')
 
     def get_parsed_response(self):
         try:

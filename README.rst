@@ -56,6 +56,17 @@ line to your template:
         <link href="{% static "server_guardian/css/styles.css" %}" rel="stylesheet">
 
 
+Reload now button
+^^^^^^^^^^^^^^^^^
+
+The ``server_list.html`` template includes a reload now button, which is useful
+for testing or if you don't want to wait for the cron job to fire again.
+It requires ``jQuery`` and if you want to keep the default template, make sure,
+you have an ``extrajs`` block in your ``main.html`` template.
+
+Note, that atm this will reload all servers, so it might take a bit
+if you have many servers configured.
+
 Usage
 -----
 

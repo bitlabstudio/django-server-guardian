@@ -3,3 +3,4 @@ six
 django-compat
 django-libs
 requests
+lockfile
