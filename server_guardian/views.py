@@ -70,8 +70,7 @@ class GuardianReloadView(JSONResponseMixin, View):
         # TODO not the most beautiful code, but it allows for easy reporting
         try:
             command = 'guardian_fetch'
-            project_root = getattr(
-                settings, 'DJANGO_PROJECT_ROOT', settings.PROJECT_ROOT)
+            project_root = getattr(settings, 'DJANGO_PROJECT_ROOT')
             manage_py = os.path.join(project_root, 'manage.py')
             venv = os.environ.get('VIRTUAL_ENV', None)
             python = '/usr/bin/python'

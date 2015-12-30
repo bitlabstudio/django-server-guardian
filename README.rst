@@ -94,6 +94,12 @@ Settings
 
 There are a few settings, you can work with.
 
+DJANGO_PROJECT_ROOT (mandatory!)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It's likely, that you already have this setting. If not, please set it to
+the directory where your ``manage.py`` file is located.
+
 SERVER_GUARDIAN_EMAIL_ON_STATUS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
