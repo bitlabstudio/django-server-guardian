@@ -7,6 +7,7 @@ from . import models
 class ServerAdmin(admin.ModelAdmin):
     """Custom admin for the ``Server`` model."""
     list_display = ('name', 'url', 'status_code')
+    fields = ('name', 'url', 'token')
     search_fields = ['name']
 
 
