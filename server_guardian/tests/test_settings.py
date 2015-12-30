@@ -12,6 +12,7 @@ SITE_ID = 1
 APP_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..'))
 
+PROJECT_ROOT = os.path.join(APP_ROOT, '..')
 
 DATABASES = {
     'default': {
@@ -55,6 +56,8 @@ INTERNAL_APPS = [
 SERVER_GUARDIAN_SECURITY_TOKEN = 'foobar'
 
 LOGIN_URL = 'admin/login/'
+
+LOCKFILE_FOLDER = os.environ.get('HOME')
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
 
