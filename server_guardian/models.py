@@ -41,11 +41,6 @@ class Server(models.Model):
         verbose_name=_('last updated'),
         blank=True, null=True,
     )
-    logging = models.BooleanField(
-        verbose_name=_('logging'),
-        help_text=_('Enable logging results to DB (recommended)'),
-        default=False,
-    )
     log_age = models.PositiveIntegerField(
         verbose_name=_('log age'),
         help_text=_('How many days the logs are kept. Set to 0 for infinite.'),
