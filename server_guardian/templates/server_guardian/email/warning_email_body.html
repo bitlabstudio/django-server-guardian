@@ -1,7 +1,11 @@
 <p>
-  [{{ server.last_updated }}] Status <strong>{{ status.STATUS }}</strong> on server <strong>{{ server.name }}</strong> at {{ server.url }}.
+  [{{ server.last_updated }}] Status on Server <strong>{{ server.name }}</strong> at {{ server.url }} has transitioned to {{ status.STATUS }}.
 </p>
 
-<p>
-  {{ status.label }}: {{ status.content }}
-</p>
+{% if status.STATUS == 'OK' %}
+ <p>Good job!</p>
+{% else %}
+  <p>
+    {{ status.content }}
+  </p>
+{% endif %}
