@@ -8,9 +8,9 @@ from django.test import TestCase
 
 import mock
 
-from .mixes import new_server_factory
+from .mixes import logging_server_factory
 from ..constants import SERVER_STATUS
-from ..models import Server
+from ..models import Server, ServerLog
 
 
 class CommandTestCase(TestCase):
@@ -18,7 +18,7 @@ class CommandTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.server = new_server_factory()
+        self.server = logging_server_factory()
         self.server_response = namedtuple(
             'response',
             ['status_code', 'content']
@@ -46,6 +46,11 @@ class CommandTestCase(TestCase):
                 'After the command was run, the server instance should have'
                 ' an updated status of "OK".'
             )
+        )
+        self.assertEqual(
+            ServerLog.objects.count(),
+            1,
+            msg=('The command should have created one server log.')
         )
 
         self.server_response.status_code = 404

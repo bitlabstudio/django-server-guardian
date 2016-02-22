@@ -4,14 +4,14 @@ import sys
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 
 import requests
 from django_libs.utils_email import send_email
 from django_libs.decorators import lockfile
 
 from ... import default_settings
-from ...models import Server
+from ...models import Server, ServerLog
 from ...constants import SERVER_STATUS
 
 LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'guardian_fetch')
@@ -73,6 +73,20 @@ class Command(BaseCommand):
             server.status_code = response.status_code
             server.last_updated = now()
             server.save()
+            if server.logging:
+                parsed_response = server.get_parsed_response()
+                for status in parsed_response:
+                    if type(status) == dict:
+                        ServerLog.objects.create(
+                            server=server,
+                            content=status['info'],
+                            status=status['status'],
+                            label=status.get('label', 'no label'),
+                        )
+                if server.log_age:
+                    ServerLog.objects.filter(
+                        time_logged__lt=now() - timedelta(days=server.log_age)
+                    ).delete()
             if self.get_email_required(server):
                 self.send_error_email(server)
                 mails_sent += 1

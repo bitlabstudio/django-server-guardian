@@ -91,6 +91,7 @@ class ServerLog(models.Model):
     )
     time_logged = models.DateTimeField(
         verbose_name=_('time_logged'),
+        auto_now=True,
     )
     status = models.CharField(
         verbose_name=_('status'),

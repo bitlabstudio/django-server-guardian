@@ -17,6 +17,7 @@ SERVER_STATUS_CHOICES = (  # pragma: no cover
 ERROR_STATUS = [SERVER_STATUS['WARNING'], SERVER_STATUS['DANGER']]  # pragma: no cover  # NOQA
 
 HTML_STATUS_FALLBACK = [{  # pragma: no cover
+    'label': 'json_error',
     'status': SERVER_STATUS['DANGER'],
     'info': 'JSON response could not be decoded.'
 }]
