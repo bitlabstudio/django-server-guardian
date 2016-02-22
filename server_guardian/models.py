@@ -41,6 +41,16 @@ class Server(models.Model):
         verbose_name=_('last updated'),
         blank=True, null=True,
     )
+    logging = models.BooleanField(
+        verbose_name=_('logging'),
+        help_text=_('Enable logging results to DB (recommended)'),
+        default=False,
+    )
+    log_age = models.PositiveIntegerField(
+        verbose_name=_('log age'),
+        help_text=_('How many days the logs are kept. Set to 0 for infinite.'),
+        default=10,
+    )
 
     def __unicode__(self):
         return self.__str__()
@@ -65,3 +75,41 @@ class Server(models.Model):
             if metric['status'] in constants.ERROR_STATUS:
                 return True
         return False
+
+
+@python_2_unicode_compatible
+class ServerLog(models.Model):
+    """Stores logging information for a server."""
+    content = models.TextField(
+        verbose_name=_('content'),
+        blank=True,
+    )
+    server = models.ForeignKey(
+        Server,
+        verbose_name=_('server'),
+        related_name='server_logs',
+    )
+    time_logged = models.DateTimeField(
+        verbose_name=_('time_logged'),
+    )
+    status = models.CharField(
+        verbose_name=_('status'),
+        choices=constants.SERVER_STATUS_CHOICES,
+        max_length=16,
+    )
+    label = models.CharField(
+        verbose_name=_('label'),
+        max_length=512,
+    )
+
+    class Meta:
+        ordering = ('server', 'label', '-time_logged')
+
+    def __unicode__(self):
+        return self.__str__()
+
+    def __str__(self):  # pragma: no cover
+        if self.name:
+            return '[{0}] {1} ({2})'.format(
+                self.server, self.label, self.time_logged
+            )
