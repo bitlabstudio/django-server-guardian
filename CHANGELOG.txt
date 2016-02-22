@@ -1,5 +1,8 @@
-=== 0.2.X (onggoing, to be released as 0.3) ===
+=== 0.3.X (onggoing, to be released as 0.3) ===
 
+- Preventing email notifications to be sent over and over again
+- Added email, when status goes back to OK
+- Added logging
 - Fixed settings attribute error
 
 === 0.2 ===
