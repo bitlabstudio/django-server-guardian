@@ -37,19 +37,23 @@ class Command(BaseCommand):
         )
 
     def get_email_required(self, serverlog):
-        """
-        Send a warning email, if the server response contains errors.
+        """Send a warning email, if the server response contains errors."""
 
-        This includes when the server reports a status of "DANGER" or if the
-        json response failed to decode or if the response code was within the
-        EMAIL_ON_STATUS settings.
-
-        """
+        # when the status code is included in our setting
         if serverlog.status_code in default_settings.EMAIL_ON_STATUS:
             return True
 
         try:
-            if serverlog.status == SERVER_STATUS['DANGER']:
+            # when the server transitions to a status of DANGER
+            if serverlog.status == SERVER_STATUS['DANGER'] and (
+                serverlog.get_previous().status != SERVER_STATUS['DANGER']
+            ):
+                return True
+
+            # when the server transitions to a status that is not DANGER
+            if serverlog.status != SERVER_STATUS['DANGER'] and (
+                serverlog.get_previous().status == SERVER_STATUS['DANGER']
+            ):
                 return True
         except (KeyError, TypeError) as ex:
             serverlog.content = (
@@ -63,7 +67,6 @@ class Command(BaseCommand):
 
     @lockfile(LOCKFILE)
     def handle(self, *args, **options):
-
         count = 0
         mails_sent = 0
 

@@ -26,6 +26,9 @@ class CommandTestCase(TestCase):
         )
         self.get_mock = requests.get
 
+    def clear_logs(self):
+        ServerLog.objects.all().delete()
+
     def tearDown(self):
         requests.get = self.get_mock
 
@@ -57,6 +60,7 @@ class CommandTestCase(TestCase):
         requests.get = mock.MagicMock(
             return_value=self.server_response,
         )
+        self.clear_logs()
         call_command('guardian_fetch')
         self.assertEqual(len(mail.outbox), 1, msg=(
             'There should be one email sent, because the server responsed with'
@@ -69,6 +73,7 @@ class CommandTestCase(TestCase):
         requests.get = mock.MagicMock(
             return_value=self.server_response,
         )
+        self.clear_logs()
         call_command('guardian_fetch')
         self.assertEqual(len(mail.outbox), 1, msg=(
             'There should be one email sent if the response is not JSON.'
@@ -80,6 +85,7 @@ class CommandTestCase(TestCase):
         requests.get = mock.MagicMock(
             return_value=self.server_response,
         )
+        self.clear_logs()
         call_command('guardian_fetch')
         self.assertEqual(len(mail.outbox), 1, msg=(
             'There should be one email sent if the response is JSON, but in'
@@ -103,7 +109,33 @@ class CommandTestCase(TestCase):
         requests.get = mock.MagicMock(
             return_value=self.server_response,
         )
+        self.clear_logs()
         call_command('guardian_fetch')
         self.assertEqual(len(mail.outbox), 2, msg=(
             "There should be an email for each of the two danger status."
+        ))
+        call_command('guardian_fetch')
+        self.assertEqual(len(mail.outbox), 2, msg=(
+            "If the command is run again, and it results in the same error"
+            " messages, there should be no additional emails about it."
+        ))
+        self.server_response.content = (
+            json.dumps(
+                [
+                    {"label": "test", "status": "OK",
+                     "info": "nothing happened"},
+                    {"label": "error", "status": "OK",
+                     "info": "we're cool again"},
+                    {"label": "broken", "status": "DANGER",
+                     "info": "S hit the fan"},
+                ]
+            )
+        )
+        requests.get = mock.MagicMock(
+            return_value=self.server_response,
+        )
+        call_command('guardian_fetch')
+        self.assertEqual(len(mail.outbox), 3, msg=(
+            "When the server transitions back to OK after a danger, there"
+            " should be a new mail in the outbox."
         ))

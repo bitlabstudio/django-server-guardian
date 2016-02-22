@@ -100,9 +100,24 @@ class ServerLog(models.Model):
         return self.__str__()
 
     def __str__(self):  # pragma: no cover
-        if self.name:
-            return '[{0}] {1} ({2})'.format(
-                self.server, self.label, self.time_logged
+        return '[{0}] {1} ({2})'.format(
+            self.server, self.label, self.time_logged
+        )
+
+    def get_previous(self):
+        try:
+            return self._meta.model.objects.filter(
+                label=self.label,
+                server=self.server,
+                time_logged__lt=self.time_logged,
+            )[0]
+        except IndexError:
+            return self._meta.model(
+                status_code=200,
+                status=constants.SERVER_STATUS['OK'],
+                label=self.label,
+                server=self.server,
+                content='No previous entry',
             )
 
     def has_errors(self):

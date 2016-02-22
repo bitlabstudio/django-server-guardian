@@ -23,6 +23,31 @@ class ServerLogTestCase(TestCase):
         server_log = mixer.blend('server_guardian.ServerLog')
         self.assertTrue(server_log.pk)
 
+    def test_get_previous(self):
+        previous_server_log = mixer.blend(
+            'server_guardian.ServerLog')
+        mixer.blend(
+            'server_guardian.ServerLog',
+            label=previous_server_log.label,
+        )
+        mixer.blend(
+            'server_guardian.ServerLog',
+            server=previous_server_log.server,
+        )
+        server_log = mixer.blend(
+            'server_guardian.ServerLog',
+            label=previous_server_log.label,
+            server=previous_server_log.server,
+        )
+        self.assertEqual(
+            server_log.get_previous(),
+            previous_server_log,
+            msg=(
+                'get_previous should return the previous server log from the'
+                ' same server and label.'
+            )
+        )
+
 
 class GetParsedResponseTestCase(TestCase):
     """Tests for the ``get_parsed_response`` function."""
