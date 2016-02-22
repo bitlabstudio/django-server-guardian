@@ -62,6 +62,8 @@ class Server(models.Model):
     def get_absolute_url(self):
         return reverse('server_guardian_dashboard')
 
+    def get_latest_log(self):
+        return self.server_logs.all()[:10]
 
 @python_2_unicode_compatible
 class ServerLog(models.Model):

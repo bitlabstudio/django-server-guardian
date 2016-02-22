@@ -23,7 +23,7 @@
     </p>
     <p>URL: {{ server.url }}</p>
     <p>Last updated: {{ server.last_updated }}</p>
-    {% regroup server.server_logs.all by label as label_group %}
+    {% regroup server.get_latest_log by label as label_group %}
     {% for label in label_group %}
       <h3>{{ label.grouper }}</h3>
       <table style="width: 100%;">
