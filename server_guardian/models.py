@@ -10,6 +10,17 @@ from compat import python_2_unicode_compatible
 from . import constants
 
 
+def get_parsed_response(response):
+    """Parses the complete response of a server from json."""
+    try:
+        response = json.loads(response)
+    except ValueError:
+        response = constants.HTML_STATUS_FALLBACK
+    if type(response) != list:
+        response = constants.HTML_STATUS_FALLBACK
+    return response
+
+
 @python_2_unicode_compatible
 class Server(models.Model):
     name = models.CharField(
@@ -28,14 +39,6 @@ class Server(models.Model):
             'Add this to your client server settings as'
             ' "SERVER_GUARDIAN_SECURITY_TOKEN".'
         ),
-    )
-    response_body = models.TextField(
-        verbose_name=_('server response'),
-        blank=True,
-    )
-    status_code = models.PositiveIntegerField(
-        verbose_name=_('server response status code'),
-        blank=True, null=True,
     )
     last_updated = models.DateTimeField(
         verbose_name=_('last updated'),
@@ -59,18 +62,6 @@ class Server(models.Model):
     def get_absolute_url(self):
         return reverse('server_guardian_dashboard')
 
-    def get_parsed_response(self):
-        try:
-            return json.loads(self.response_body)
-        except ValueError:
-            return constants.HTML_STATUS_FALLBACK
-
-    def has_errors(self):
-        for metric in self.get_parsed_response():
-            if metric['status'] in constants.ERROR_STATUS:
-                return True
-        return False
-
 
 @python_2_unicode_compatible
 class ServerLog(models.Model):
@@ -93,6 +84,10 @@ class ServerLog(models.Model):
         choices=constants.SERVER_STATUS_CHOICES,
         max_length=16,
     )
+    status_code = models.CharField(
+        verbose_name=_('status code'),
+        max_length=3,
+    )
     label = models.CharField(
         verbose_name=_('label'),
         max_length=512,
@@ -109,3 +104,7 @@ class ServerLog(models.Model):
             return '[{0}] {1} ({2})'.format(
                 self.server, self.label, self.time_logged
             )
+
+    def has_errors(self):
+        return self.status in constants.ERROR_STATUS
+

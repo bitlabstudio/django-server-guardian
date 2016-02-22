@@ -1,13 +1,7 @@
 <p>
-    [{{ server.last_updated }}] Server <strong>{{ server.name }}</strong> at
-    <strong>{{ server.url }}</strong> returned status code
-    <strong>{{ server.status_code }}</strong>.
+  [{{ server.last_updated }}] Status <strong>{{ status.STATUS }}</strong> on server <strong>{{ server.name }}</strong> at {{ server.url }}.
 </p>
+
 <p>
-    Returned body:
+  {{ status.label }}: {{ status.content }}
 </p>
-<pre>
-    <code>
-        {{ server.response_body }}
-    </code>
-</pre>

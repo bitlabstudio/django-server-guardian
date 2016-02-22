@@ -1,4 +1,5 @@
 """Tests for the ``guardian_fetch`` command."""
+import json
 import requests
 from collections import namedtuple
 
@@ -8,9 +9,9 @@ from django.test import TestCase
 
 import mock
 
-from .mixes import logging_server_factory
+from .mixes import new_server_factory
 from ..constants import SERVER_STATUS
-from ..models import Server, ServerLog
+from ..models import ServerLog
 
 
 class CommandTestCase(TestCase):
@@ -18,7 +19,7 @@ class CommandTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.server = logging_server_factory()
+        self.server = new_server_factory()
         self.server_response = namedtuple(
             'response',
             ['status_code', 'content']
@@ -38,19 +39,18 @@ class CommandTestCase(TestCase):
             return_value=self.server_response,
         )
         call_command('guardian_fetch')
-        server = Server.objects.get(pk=self.server.pk)
         self.assertEqual(
-            server.get_parsed_response()[0]['status'],
+            ServerLog.objects.count(),
+            1,
+            msg=('The command should have created one server log.')
+        )
+        self.assertEqual(
+            ServerLog.objects.get().status,
             SERVER_STATUS['OK'],
             msg=(
                 'After the command was run, the server instance should have'
                 ' an updated status of "OK".'
             )
-        )
-        self.assertEqual(
-            ServerLog.objects.count(),
-            1,
-            msg=('The command should have created one server log.')
         )
 
         self.server_response.status_code = 404
@@ -84,4 +84,26 @@ class CommandTestCase(TestCase):
         self.assertEqual(len(mail.outbox), 1, msg=(
             'There should be one email sent if the response is JSON, but in'
             ' the wrong format.'
+        ))
+
+        mail.outbox = []
+        self.server_response.status_code = 200
+        self.server_response.content = (
+            json.dumps(
+                [
+                    {"label": "test", "status": "OK",
+                     "info": "nothing happened"},
+                    {"label": "error", "status": "DANGER",
+                     "info": "it gets bad"},
+                    {"label": "broken", "status": "DANGER",
+                     "info": "S hit the fan"},
+                ]
+            )
+        )
+        requests.get = mock.MagicMock(
+            return_value=self.server_response,
+        )
+        call_command('guardian_fetch')
+        self.assertEqual(len(mail.outbox), 2, msg=(
+            "There should be an email for each of the two danger status."
         ))

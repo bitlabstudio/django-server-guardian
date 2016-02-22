@@ -11,7 +11,7 @@ from django_libs.utils_email import send_email
 from django_libs.decorators import lockfile
 
 from ... import default_settings
-from ...models import Server, ServerLog
+from ...models import Server, ServerLog, get_parsed_response
 from ...constants import SERVER_STATUS
 
 LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'guardian_fetch')
@@ -19,10 +19,13 @@ LOCKFILE = os.path.join(settings.LOCKFILE_FOLDER, 'guardian_fetch')
 
 class Command(BaseCommand):
 
-    def send_error_email(self, server):
+    def send_error_email(self, serverlog):
         context = {
-            'server': server,
-            'subject': u'{} - {}'.format(server.status_code, server.name),
+            'server': serverlog.server,
+            'subject': u'{0} {1} - {2}'.format(
+                serverlog.status, serverlog.status_code, serverlog.server.name
+            ),
+            'status': serverlog,
         }
         send_email(
             request={},
@@ -33,7 +36,7 @@ class Command(BaseCommand):
             recipients=[admin[1] for admin in settings.ADMINS],
         )
 
-    def get_email_required(self, server):
+    def get_email_required(self, serverlog):
         """
         Send a warning email, if the server response contains errors.
 
@@ -42,19 +45,18 @@ class Command(BaseCommand):
         EMAIL_ON_STATUS settings.
 
         """
-        if server.status_code in default_settings.EMAIL_ON_STATUS:
+        if serverlog.status_code in default_settings.EMAIL_ON_STATUS:
             return True
 
         try:
-            for metric in server.get_parsed_response():
-                if metric['status'] == SERVER_STATUS['DANGER']:
-                    return True
+            if serverlog.status == SERVER_STATUS['DANGER']:
+                return True
         except (KeyError, TypeError) as ex:
-            server.response_body = (
+            serverlog.content = (
                 'Server got an error "{0}" and returned the following content:'
-                '{1}'.format(ex, server.response_body)
+                '{1}'.format(ex, serverlog.content)
             )
-            server.save()
+            serverlog.save()
             return True
 
         return False
@@ -69,27 +71,28 @@ class Command(BaseCommand):
             response = requests.get(url=server.url, params={
                 'token': server.token
             })
-            server.response_body = response.content
-            server.status_code = response.status_code
             server.last_updated = now()
             server.save()
-            if server.logging:
-                parsed_response = server.get_parsed_response()
-                for status in parsed_response:
-                    if type(status) == dict:
-                        ServerLog.objects.create(
-                            server=server,
-                            content=status['info'],
-                            status=status['status'],
-                            label=status.get('label', 'no label'),
-                        )
-                if server.log_age:
-                    ServerLog.objects.filter(
-                        time_logged__lt=now() - timedelta(days=server.log_age)
-                    ).delete()
-            if self.get_email_required(server):
-                self.send_error_email(server)
-                mails_sent += 1
+            parsed_response = get_parsed_response(response.content)
+            for status in parsed_response:
+                if type(status) == dict:
+                    serverlog = ServerLog.objects.create(
+                        server=server,
+                        content=status['info'],
+                        status=status['status'],
+                        label=status.get('label', 'no label'),
+                        status_code = response.status_code,
+                    )
+                    if self.get_email_required(serverlog):
+                        self.send_error_email(serverlog)
+                        mails_sent += 1
+                else:
+                    self.send_error_email(serverlog)
+                    mails_sent += 1
+            if server.log_age:
+                ServerLog.objects.filter(
+                    time_logged__lt=now() - timedelta(days=server.log_age)
+                ).delete()
             count += 1
 
         sys.stdout.write(
