@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import now, timedelta
 
 import requests
-from django_libs.utils_email import send_email
+from django_libs.utils.email import send_email
 from django_libs.decorators import lockfile
 
 from ... import default_settings
@@ -28,12 +28,12 @@ class Command(BaseCommand):
             'status': serverlog,
         }
         send_email(
-            request={},
-            extra_context=context,
-            subject_template='server_guardian/email/email_subject.html',
-            body_template='server_guardian/email/warning_email_body.html',
-            from_email=settings.FROM_EMAIL,
-            recipients=[admin[1] for admin in settings.ADMINS],
+            {},
+            context,
+            'server_guardian/email/email_subject.html',
+            'server_guardian/email/warning_email_body.html',
+            settings.FROM_EMAIL,
+            [admin[1] for admin in settings.ADMINS],
         )
 
     def get_email_required(self, serverlog):
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                         content=status['info'],
                         status=status['status'],
                         label=status.get('label', 'no label'),
-                        status_code = response.status_code,
+                        status_code=response.status_code,
                     )
                     if self.get_email_required(serverlog):
                         self.send_error_email(serverlog)

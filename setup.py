@@ -31,9 +31,6 @@ import os
 from setuptools import setup, find_packages
 import server_guardian as app
 
-dev_requires = [
-    'flake8',
-]
 
 install_requires = open('requirements.txt').read().splitlines()
 
@@ -61,7 +58,4 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
-    extras_require={
-        'dev': dev_requires,
-    },
 )

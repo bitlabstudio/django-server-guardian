@@ -1,5 +1,6 @@
 === 0.3.X (onggoing, to be released as 0.4) ===
 
+- Prepared app for Django 1.9 and Python 3.5
 - Limiting results on server list
 
 === 0.3.0 ===

@@ -3,9 +3,8 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-
-from compat import python_2_unicode_compatible
 
 from . import constants
 
@@ -50,9 +49,6 @@ class Server(models.Model):
         default=10,
     )
 
-    def __unicode__(self):
-        return self.__str__()
-
     def __str__(self):  # pragma: no cover
         if self.name:
             return self.name
@@ -64,6 +60,7 @@ class Server(models.Model):
 
     def get_latest_log(self):
         return self.server_logs.all()[:10]
+
 
 @python_2_unicode_compatible
 class ServerLog(models.Model):
@@ -97,9 +94,6 @@ class ServerLog(models.Model):
 
     class Meta:
         ordering = ('server', 'label', '-time_logged')
-
-    def __unicode__(self):
-        return self.__str__()
 
     def __str__(self):  # pragma: no cover
         return '[{0}] {1} ({2})'.format(
